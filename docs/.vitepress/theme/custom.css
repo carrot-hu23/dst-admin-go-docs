@@ -1,0 +1,42 @@
+/* 自定义样式 */
+:root {
+  /* 主色 */
+  --vp-c-brand-1: #646cff;
+  --vp-c-brand-2: #747bff;
+  --vp-c-brand-3: #858bff;
+}
+
+/* 背景渐变 */
+.dark {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+/* 首页操作按钮 */
+.VPHome .VPButton {
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.VPHome .VPButton.brand {
+  background-color: var(--vp-c-brand-1);
+  border: 2px solid var(--vp-c-brand-1);
+}
+
+.VPHome .VPButton.brand:hover {
+  background-color: var(--vp-c-brand-2);
+  border-color: var(--vp-c-brand-2);
+  transform: translateY(-2px);
+}
+
+.VPHome .VPButton.alt {
+  border: 2px solid var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+}
+
+.VPHome .VPButton.alt:hover {
+  background-color: var(--vp-c-brand-1);
+  color: white;
+  transform: translateY(-2px);
+}
