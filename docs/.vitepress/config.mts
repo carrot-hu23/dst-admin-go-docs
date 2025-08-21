@@ -1,4 +1,20 @@
 import { defineConfig } from 'vitepress'
+import { resolve } from 'path'
+import fs from 'fs'
+
+// 自动注册 .vitepress/components 目录下的所有组件
+const componentsDir = resolve(__dirname, './components')
+const components = {}
+
+if (fs.existsSync(componentsDir)) {
+  const files = fs.readdirSync(componentsDir)
+  for (const file of files) {
+    if (file.endsWith('.vue')) {
+      const name = file.replace('.vue', '')
+      components[name] = resolve(componentsDir, file)
+    }
+  }
+}
 
 export default defineConfig({
   title: 'DST Admin Go',
@@ -36,6 +52,24 @@ export default defineConfig({
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/carrot-hu23/dst-admin-go' }
+    ]
+  },
+  vite: {
+    plugins: [
+      {
+        name: 'auto-register-components',
+        async config() {
+          return {
+            resolve: {
+              alias: {
+                ...Object.fromEntries(
+                  Object.entries(components).map(([name, path]) => [name, path])
+                )
+              }
+            }
+          }
+        }
+      }
     ]
   }
 })
