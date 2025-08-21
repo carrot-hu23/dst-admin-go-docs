@@ -3,7 +3,8 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'DST Admin Go',
   description: '饥荒联机版服务器管理面板',
-  base: '/dst-admin-go/',
+  base: '/dst-admin-go-docs/',
+  ignoreDeadLinks: true,
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
