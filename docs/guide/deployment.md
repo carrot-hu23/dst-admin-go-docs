@@ -117,11 +117,7 @@ chmod +x start.sh
 
 在浏览器中访问面板地址（通常为 `http://localhost:8082` 或根据提示），并进行初始化设置。
 
-### 5. 安装环境（可选）
-
-通过面板界面或手动安装 `steamcmd` 以及饥荒 Dedicated Server。
-
-#### 手动安装 SteamCMD
+### 5. 安装steamcmd 和 饥荒
 
 1. 访问 [SteamCMD 官方页面](https://developer.valvesoftware.com/wiki/SteamCMD) 下载适用于 Windows 的 SteamCMD。
 2. 下载完成后，将 `steamcmd.zip` 解压到您希望安装的目录，例如 `C:\steamcmd\`。
@@ -136,21 +132,13 @@ chmod +x start.sh
    ```
    这会将饥荒专用服务器安装到 `C:\dst-dedicated-server` 目录。
 
-#### 通过面板安装环境
-
-1. 启动 `dst-admin-go.exe` 后，访问管理面板。
-2. 登录后，进入"系统设置"页面。
-3. 在"环境配置"部分，点击"安装 SteamCMD"按钮。
-4. 等待安装完成后，点击"安装饥荒服务器"按钮。
-5. 系统会自动下载并安装 SteamCMD 和饥荒专用服务器。
-
 ### 6. 配置路径
 
 在面板的设置中，指定 `steamcmd` 和饥荒 Dedicated Server 的安装路径：
 - SteamCMD 路径：例如 `C:\steamcmd\steamcmd.exe`
 - 饥荒服务器路径：例如 `C:\dst-dedicated-server`
 
-这些路径会自动写入到 `dst_config` 配置文件中。您也可以直接编辑 `dst_config` 文件来配置这些路径，请参考 [配置说明](/guide/configuration) 了解详细信息。
+您也可以直接编辑 `dst_config` 文件来配置这些路径，请参考 [配置说明](/guide/configuration) 了解详细信息。
 
 ### 7. 创建并启动房间
 
