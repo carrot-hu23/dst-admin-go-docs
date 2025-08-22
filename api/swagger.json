@@ -1,0 +1,511 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for managing Don't Starve Together game servers.",
+        "title": "Dst Admin Go API",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8082",
+    "basePath": "/",
+    "paths": {
+        "/api/cluster/level": {
+            "get": {
+                "description": "Retrieve the list of levels in a cluster",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cluster"
+                ],
+                "summary": "Get cluster level list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster name",
+                        "name": "clusterName",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of cluster levels",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/level.World"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/game/8level/command": {
+            "post": {
+                "description": "Send a command to a specific game level",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Game Level"
+                ],
+                "summary": "Send command to game level",
+                "parameters": [
+                    {
+                        "description": "Command to send",
+                        "name": "command",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "command": {
+                                    "type": "string"
+                                },
+                                "levelName": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Command sent successfully",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/game/8level/players": {
+            "get": {
+                "description": "Retrieve the list of online players for a specific level",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Game Level"
+                ],
+                "summary": "Get online players",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Level name",
+                        "name": "levelName",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster name",
+                        "name": "clusterName",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of online players",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/vo.PlayerVO"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/game/8level/status": {
+            "get": {
+                "description": "Retrieve the status of all game levels in a cluster",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Game Level"
+                ],
+                "summary": "Get game level status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster name",
+                        "name": "clusterName",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Level status information",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/api.LevelInfo"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/game/archive": {
+            "get": {
+                "description": "Retrieve information about the game archive for a specific cluster",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Game"
+                ],
+                "summary": "Get game archive information",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cluster name",
+                        "name": "clusterName",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Game archive information",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "description": "Authenticate user with username and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User login",
+                "parameters": [
+                    {
+                        "description": "User credentials",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.UserVO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "get": {
+                "description": "Log out the current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User logout",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.LevelInfo": {
+            "type": "object",
+            "properties": {
+                "Ps": {
+                    "$ref": "#/definitions/vo.DstPsVo"
+                },
+                "is_master": {
+                    "type": "boolean"
+                },
+                "levelName": {
+                    "type": "string"
+                },
+                "leveldataoverride": {
+                    "type": "string"
+                },
+                "modoverrides": {
+                    "type": "string"
+                },
+                "server_ini": {
+                    "$ref": "#/definitions/level.ServerIni"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "level.ServerIni": {
+            "type": "object",
+            "properties": {
+                "authentication_port": {
+                    "description": "[STEAM]",
+                    "type": "integer"
+                },
+                "encode_user_path": {
+                    "description": "[ACCOUNT]",
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_master": {
+                    "description": "[SHARD]",
+                    "type": "boolean"
+                },
+                "master_server_port": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "server_port": {
+                    "description": "[NETWORK]",
+                    "type": "integer"
+                }
+            }
+        },
+        "level.World": {
+            "type": "object",
+            "properties": {
+                "is_master": {
+                    "type": "boolean"
+                },
+                "levelName": {
+                    "type": "string"
+                },
+                "leveldataoverride": {
+                    "type": "string"
+                },
+                "modoverrides": {
+                    "type": "string"
+                },
+                "server_ini": {
+                    "$ref": "#/definitions/level.ServerIni"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "vo.DstPsVo": {
+            "type": "object",
+            "properties": {
+                "RSS": {
+                    "type": "string"
+                },
+                "VSZ": {
+                    "type": "string"
+                },
+                "cpuUage": {
+                    "type": "string"
+                },
+                "memUage": {
+                    "type": "string"
+                }
+            }
+        },
+        "vo.PlayerVO": {
+            "type": "object",
+            "properties": {
+                "day": {
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "kuId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "vo.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "提示代码",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "数据"
+                },
+                "msg": {
+                    "description": "提示信息",
+                    "type": "string"
+                }
+            }
+        },
+        "vo.UserVO": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "sessionId": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

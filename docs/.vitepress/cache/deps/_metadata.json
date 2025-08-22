@@ -1,31 +1,40 @@
 {
-  "hash": "0e87bdf6",
+  "hash": "d15e79b6",
   "configHash": "18443c59",
-  "lockfileHash": "7235d9f1",
-  "browserHash": "1758e205",
+  "lockfileHash": "ddedb50e",
+  "browserHash": "8f868599",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "34dd9c1e",
+      "fileHash": "e3697f6c",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "80787709",
+      "fileHash": "d0247e6f",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "e88b77e0",
+      "fileHash": "4bba8a41",
+      "needsInterop": false
+    },
+    "swagger-ui": {
+      "src": "../../../../node_modules/swagger-ui/dist/swagger-ui-es-bundle-core.js",
+      "file": "swagger-ui.js",
+      "fileHash": "80c87585",
       "needsInterop": false
     }
   },
   "chunks": {
     "chunk-6LCYL6XL": {
       "file": "chunk-6LCYL6XL.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
     }
   }
 }
