@@ -39,7 +39,7 @@ export default defineConfig({
             { text: 'NAT VPS 部署', link: '/guide/nat-vps' },
             { text: 'Docker 部署', link: '/guide/docker' },
             { text: '群晖系统部署', link: '/guide/synology-deployment' },
-            { text: 'Frp转发饥荒中转站', link: '/guide/frp' }
+            { text: 'FRP 代理配置', link: '/guide/frp-proxy' }
           ]
         }
       ],
