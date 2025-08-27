@@ -8,6 +8,16 @@ outline: deep
 
 如果您的服务器支持 Docker，可以使用 Docker 来部署 `dst-admin-go`。
 
+快速运行，**第一次需要等待十几分钟下载饥荒服务器，如果需要挂载出去请参考下面的命令**
+```shell
+docker run -d \\
+  --name dst-admin-go \\
+  -p 8082:8082 \\
+  -p 10999:10999/udp \\
+  -p 10998:10998/udp \\
+  hujinbo23/dst-admin-go:1.5.1
+```
+
 ## 使用 Docker Hub 镜像
 
 `dst-admin-go` 提供了官方 Docker 镜像，您可以直接从 Docker Hub 拉取并运行：
@@ -19,7 +29,7 @@ mkdir -p ~/steamcmd
 mkdir -p ~/dst-dedicated-server
 
 # 拉取指定版本的镜像（推荐使用具体版本而不是 latest）
-docker pull hujinbo23/dst-admin-go:1.5.0
+docker pull hujinbo23/dst-admin-go:1.5.1
 
 # 运行容器
 docker run -d \\
@@ -34,7 +44,7 @@ docker run -d \\
   -v ~/dstsave/dst-db:/app/dst-db \\
   -v ~/dstsave/password.txt:/app/password.txt \\
   -v ~/dstsave/first:/app/first \\
-  hujinbo23/dst-admin-go:1.5.0
+  hujinbo23/dst-admin-go:1.5.1
 ```
 
 ## 参数说明
@@ -74,7 +84,7 @@ version: '3'
 
 services:
   dst-admin-go:
-    image: hujinbo23/dst-admin-go:1.5.0
+    image: hujinbo23/dst-admin-go:1.5.1
     container_name: dst-admin-go
     ports:
       - "8082:8082"
