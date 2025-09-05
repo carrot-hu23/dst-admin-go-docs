@@ -12,6 +12,9 @@ hero:
     - theme: alt
       text: GitHub
       link: https://github.com/carrot-hu23/dst-admin-go
+    - theme: alt
+      text: 在线预览
+      link: https://carrot-hu23.github.io/dst-admin-go-preview
 
 features:
   - title: ✨ 简单易用

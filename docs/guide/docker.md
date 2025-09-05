@@ -8,13 +8,14 @@ outline: deep
 
 如果您的服务器支持 Docker，可以使用 Docker 来部署 `dst-admin-go`。
 
-快速运行，**第一次需要等待十几分钟下载饥荒服务器，如果需要挂载出去请参考下面的命令**
+**快速运行**
+> 第一次需要等待十几分钟下载饥荒服务器，如果需要挂载出去请参考下面的命令
 ```shell
-docker run -d \\
-  --name dst-admin-go \\
-  -p 8082:8082 \\
-  -p 10999:10999/udp \\
-  -p 10998:10998/udp \\
+docker run -d \
+  --name dst-admin-go \
+  -p 8082:8082 \
+  -p 10999:10999/udp \
+  -p 10998:10998/udp \
   hujinbo23/dst-admin-go:1.5.1
 ```
 
@@ -22,28 +23,38 @@ docker run -d \\
 
 `dst-admin-go` 提供了官方 Docker 镜像，您可以直接从 Docker Hub 拉取并运行：
 
+在宿主机上安装 SteamCMD 并下载饥荒专用服务器：
+
 ```bash
-# 创建必要的目录
-mkdir -p ~/dstsave
+# 创建目录
 mkdir -p ~/steamcmd
 mkdir -p ~/dst-dedicated-server
+mkdir -p ~/dstsave
+
+# 下载并安装 SteamCMD
+cd ~/steamcmd
+wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
+tar -xvzf steamcmd_linux.tar.gz
+
+# 使用 SteamCMD 安装饥荒专用服务器
+./steamcmd.sh +login anonymous +force_install_dir ~/dst-dedicated-server +app_update 343050 validate +quit
+```
+
+```bash
 
 # 拉取指定版本的镜像（推荐使用具体版本而不是 latest）
 docker pull hujinbo23/dst-admin-go:1.5.1
 
 # 运行容器
-docker run -d \\
-  --name dst-admin-go \\
-  -p 8082:8082 \\
-  -p 10999:10999/udp \\
-  -p 10998:10998/udp \\
-  -v ~/dstsave:/root/.klei/DoNotStarveTogether \\
-  -v ~/dstsave/back:/app/backup \\
-  -v ~/steamcmd:/app/steamcmd \\
-  -v ~/dst-dedicated-server:/app/dst-dedicated-server \\
-  -v ~/dstsave/dst-db:/app/dst-db \\
-  -v ~/dstsave/password.txt:/app/password.txt \\
-  -v ~/dstsave/first:/app/first \\
+docker run -d \
+  --name dst-admin-go \
+  -p 8082:8082 \
+  -p 10999:10999/udp \
+  -p 10998:10998/udp \
+  -v ~/dstsave:/root/.klei/DoNotStarveTogether \
+  -v ~/dstsave/back:/app/backup \
+  -v ~/steamcmd:/app/steamcmd \
+  -v ~/dst-dedicated-server:/app/dst-dedicated-server \
   hujinbo23/dst-admin-go:1.5.1
 ```
 
@@ -58,9 +69,27 @@ docker run -d \\
 - `-v ~/dstsave/back:/app/backup`: 挂载存档备份目录
 - `-v ~/steamcmd:/app/steamcmd`: 挂载 SteamCMD 目录
 - `-v ~/dst-dedicated-server:/app/dst-dedicated-server`: 挂载饥荒专用服务器目录
+
+下面三个参数都是文件，如果需要挂载请自行创建好
+
 - `-v ~/dstsave/dst-db:/app/dst-db`: 挂载玩家日志文件
+  ```shell
+  touch dst-db
+  ``` 
 - `-v ~/dstsave/password.txt:/app/password.txt`: 挂载密码文件
+  ```shell
+  cat > password.txt << EOF
+  username = admin
+  password = 123456
+  displayName = admin
+  photoURL =
+  email = xxx
+  EOF
+  ``` 
 - `-v ~/dstsave/first:/app/first`: 挂载初始化标识文件
+  ```shell
+  touch first
+  ``` 
 
 ## 路径说明
 
@@ -101,62 +130,6 @@ services:
     restart: unless-stopped
 ```
 
-然后运行以下命令启动服务：
-
-```bash
-# 启动服务
-docker-compose up -d
-
-# 查看日志
-docker-compose logs -f
-
-# 停止服务
-docker-compose down
-```
-
-## 安装 SteamCMD 和饥荒专用服务器
-
-在宿主机上安装 SteamCMD 并下载饥荒专用服务器：
-
-```bash
-# 创建目录
-mkdir -p ~/steamcmd
-mkdir -p ~/dst-dedicated-server
-
-# 下载并安装 SteamCMD
-cd ~/steamcmd
-wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
-tar -xvzf steamcmd_linux.tar.gz
-
-# 使用 SteamCMD 安装饥荒专用服务器
-./steamcmd.sh +login anonymous +force_install_dir ~/dst-dedicated-server +app_update 343050 validate +quit
-```
-
-## 管理容器
-
-```bash
-# 查看运行状态
-docker ps
-
-# 查看日志
-docker logs dst-admin-go
-
-# 实时查看日志
-docker logs -f dst-admin-go
-
-# 停止容器
-docker stop dst-admin-go
-
-# 启动容器
-docker start dst-admin-go
-
-# 重启容器
-docker restart dst-admin-go
-
-# 删除容器
-docker rm dst-admin-go
-```
-
 ## 首次运行初始化
 
 首次运行容器时，由于缺少 `first` 文件，系统会跳转到初始化界面要求设置管理员账号和密码。您可以通过以下方式创建该文件以跳过初始化：
@@ -166,7 +139,11 @@ docker rm dst-admin-go
 touch ~/dstsave/first
 
 # 创建 password.txt 文件（格式：用户名:密码）
-echo "admin:your_password" > ~/dstsave/password.txt
+echo "username = admin
+password = 123456
+displayName = admin
+photoURL = 
+email = xxx" > password.txt
 ```
 
 ## 文件权限问题
