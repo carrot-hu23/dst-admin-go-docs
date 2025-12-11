@@ -155,7 +155,7 @@ chmod +x start.sh
 ### 6. 配置路径
 
 在面板的设置中，指定 `steamcmd` 和饥荒 Dedicated Server 的安装路径：
-- SteamCMD 路径：例如 `C:\steamcmd\steamcmd.exe`
+- SteamCMD 路径：例如 `C:\steamcmd`
 - 饥荒服务器路径：例如 `C:\dst-dedicated-server`
 
 您也可以直接编辑 `dst_config` 文件来配置这些路径，请参考 [配置说明](/guide/configuration) 了解详细信息。
