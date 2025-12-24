@@ -124,7 +124,6 @@ services:
       - ${PWD}/dstsave/back:/app/backup
       - ${PWD}/steamcmd:/app/steamcmd
       - ${PWD}/dst-dedicated-server:/app/dst-dedicated-server
-      - ${PWD}/dstsave/dst-db:/app/dst-db
       - ${PWD}/dstsave/password.txt:/app/password.txt
       - ${PWD}/dstsave/first:/app/first
     restart: unless-stopped
