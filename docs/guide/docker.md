@@ -107,6 +107,20 @@ docker run -d \
 ## 使用 docker-compose (推荐)
 
 创建 `docker-compose.yml` 文件：
+>下面 dst-db 是一个文件先创建，再启动 docker-compose。不然会报错
+
+```bash
+# 创建 first 文件
+touch ~/dstsave/first
+touch ~/dstsave/dst-db
+
+# 创建 ~/dstsave/password.txt 文件
+echo "username = admin
+password = 123456
+displayName = admin
+photoURL = 
+email = xxx" > ~/dstsave/password.txt
+```
 
 ```yaml
 version: '3'
@@ -125,6 +139,7 @@ services:
       - ${PWD}/steamcmd:/app/steamcmd
       - ${PWD}/dst-dedicated-server:/app/dst-dedicated-server
       - ${PWD}/dstsave/password.txt:/app/password.txt
+      - ${PWD}/dstsave/dst-db:/app/dst-db
       - ${PWD}/dstsave/first:/app/first
     restart: unless-stopped
 ```
@@ -132,18 +147,6 @@ services:
 ## 首次运行初始化
 
 首次运行容器时，由于缺少 `first` 文件，系统会跳转到初始化界面要求设置管理员账号和密码。您可以通过以下方式创建该文件以跳过初始化：
-
-```bash
-# 创建 first 文件
-touch ~/dstsave/first
-
-# 创建 password.txt 文件（格式：用户名:密码）
-echo "username = admin
-password = 123456
-displayName = admin
-photoURL = 
-email = xxx" > password.txt
-```
 
 ## 文件权限问题
 
