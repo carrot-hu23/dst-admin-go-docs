@@ -8,6 +8,45 @@ outline: deep
 
 如果您的服务器支持 Docker，可以使用 Docker 来部署 `dst-admin-go`。
 
+## 使用 docker-compose (推荐)
+
+### 前置文件
+```bash
+# 创建 first 文件
+touch ~/dstsave/first
+touch ~/dstsave/dst-db
+
+# 创建 ~/dstsave/password.txt 文件
+echo "username = admin
+password = 123456
+displayName = admin
+photoURL = 
+email = xxx" > ~/dstsave/password.txt
+```
+
+### docker-compose.yml
+```yaml
+version: '3'
+
+services:
+  dst-admin-go:
+    image: hujinbo23/dst-admin-go:1.5.1
+    container_name: dst-admin-go
+    ports:
+      - "8082:8082"
+      - "10999:10999/udp"
+      - "10998:10998/udp"
+    volumes:
+      - ${PWD}/dstsave:/root/.klei/DoNotStarveTogether
+      - ${PWD}/dstsave/back:/app/backup
+      - ${PWD}/steamcmd:/app/steamcmd
+      - ${PWD}/dst-dedicated-server:/app/dst-dedicated-server
+      - ${PWD}/dstsave/password.txt:/app/password.txt
+      - ${PWD}/dstsave/dst-db:/app/dst-db
+      - ${PWD}/dstsave/first:/app/first
+    restart: unless-stopped
+```
+
 **快速运行**
 > 第一次需要等待十几分钟下载饥荒服务器，如果需要挂载出去请参考下面的命令
 ```shell
@@ -104,45 +143,6 @@ docker run -d \
 - 容器启动steamcmd：`/app/steamcmd`
 - `first` 文件: 代表是否第一次登录，如果没有这个文件会跳转到初始化界面设置账号
 
-## 使用 docker-compose (推荐)
-
-创建 `docker-compose.yml` 文件：
->下面 dst-db 是一个文件先创建，再启动 docker-compose。不然会报错
-
-```bash
-# 创建 first 文件
-touch ~/dstsave/first
-touch ~/dstsave/dst-db
-
-# 创建 ~/dstsave/password.txt 文件
-echo "username = admin
-password = 123456
-displayName = admin
-photoURL = 
-email = xxx" > ~/dstsave/password.txt
-```
-
-```yaml
-version: '3'
-
-services:
-  dst-admin-go:
-    image: hujinbo23/dst-admin-go:1.5.1
-    container_name: dst-admin-go
-    ports:
-      - "8082:8082"
-      - "10999:10999/udp"
-      - "10998:10998/udp"
-    volumes:
-      - ${PWD}/dstsave:/root/.klei/DoNotStarveTogether
-      - ${PWD}/dstsave/back:/app/backup
-      - ${PWD}/steamcmd:/app/steamcmd
-      - ${PWD}/dst-dedicated-server:/app/dst-dedicated-server
-      - ${PWD}/dstsave/password.txt:/app/password.txt
-      - ${PWD}/dstsave/dst-db:/app/dst-db
-      - ${PWD}/dstsave/first:/app/first
-    restart: unless-stopped
-```
 
 ## 首次运行初始化
 
