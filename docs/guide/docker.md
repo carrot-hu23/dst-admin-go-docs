@@ -37,6 +37,8 @@ services:
       - "10999:10999/udp"
       - "10998:10998/udp"
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
       - ${PWD}/dstsave:/root/.klei/DoNotStarveTogether
       - ${PWD}/dstsave/back:/app/backup
       - ${PWD}/steamcmd:/app/steamcmd
