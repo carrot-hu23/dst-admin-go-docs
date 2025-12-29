@@ -49,36 +49,18 @@ services:
     restart: unless-stopped
 ```
 
-**快速运行**
-> 第一次需要等待十几分钟下载饥荒服务器，如果需要挂载出去请参考下面的命令
-```shell
-docker run -d \
-  --name dst-admin-go \
-  -p 8082:8082 \
-  -p 10999:10999/udp \
-  -p 10998:10998/udp \
-  hujinbo23/dst-admin-go:1.5.1
-```
-
 ## 使用 Docker Hub 镜像
 
 `dst-admin-go` 提供了官方 Docker 镜像，您可以直接从 Docker Hub 拉取并运行：
 
-在宿主机上安装 SteamCMD 并下载饥荒专用服务器：
 
 ```bash
 # 创建目录
 mkdir -p ~/steamcmd
 mkdir -p ~/dst-dedicated-server
 mkdir -p ~/dstsave
-
-# 下载并安装 SteamCMD
-cd ~/steamcmd
-wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
-tar -xvzf steamcmd_linux.tar.gz
-
-# 使用 SteamCMD 安装饥荒专用服务器
-./steamcmd.sh +login anonymous +force_install_dir ~/dst-dedicated-server +app_update 343050 validate +quit
+touch ~/dstsave/first
+touch ~/dstsave/dst-db
 ```
 
 ```bash
