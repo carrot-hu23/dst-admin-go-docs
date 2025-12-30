@@ -34,6 +34,7 @@ export default defineConfig({
           items: [
             { text: '快速开始', link: '/guide/getting-started' },
             { text: '配置说明', link: '/guide/configuration' },
+            { text: '导入自定义存档', link: '/guide/export_user_cluster' },
             { text: '模组失效问题', link: '/guide/mod-issues' },
             { text: 'NAT VPS 部署', link: '/guide/nat-vps' },
             { text: 'Docker 部署', link: '/guide/docker' },
