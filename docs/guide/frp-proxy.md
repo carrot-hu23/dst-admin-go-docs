@@ -44,14 +44,14 @@ token = "your_token_here"
 
 [[proxies]]
 name = "dst-master"
-type = "tcp"
+type = "udp"
 localIP = "127.0.0.1"
 localPort = 10999
 remotePort = 10999
 
 [[proxies]]
 name = "dst-caves"
-type = "tcp"
+type = "udp"
 localIP = "127.0.0.1"
 localPort = 10998
 remotePort = 10998
@@ -62,7 +62,7 @@ remotePort = 10998
 - `token`: 与服务端相同的令牌。
 - `[[proxies]]`: 代理配置部分，可以定义多个代理。
   - `name`: 代理的名称，用于标识不同的服务。
-  - `type`: 代理类型，DST 使用 TCP。
+  - `type`: 代理类型，DST 使用 udp。
   - `localIP`: 本地 DST 服务器的 IP 地址。
   - `localPort`: 本地 DST 世界的端口。
   - `remotePort`: 公网服务器上映射的端口，外部玩家将通过此端口连接。
@@ -95,9 +95,9 @@ server_port = 10998
 
 确保你的本地防火墙允许 FRP 客户端和 DST 服务器的端口通过。
 
-- DST “森林”端口 (默认 10999/TCP)
-- DST “洞穴”端口 (默认 10998/TCP)
-- FRP 客户端与服务端通信端口 (默认 7000/TCP)
+- DST “森林”端口 (默认 10999/UDP)
+- DST “洞穴”端口 (默认 10998/UDP)
+- FRP 客户端与服务端通信端口 (默认 7000)
 
 ## 连接服务器
 
