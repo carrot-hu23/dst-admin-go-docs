@@ -23,7 +23,7 @@ displayName = admin
 photoURL = 
 email = xxx" > ~/dstsave/password.txt
 ```
-
+如果你挂载了 password.txt，那么登录账号密码就是上面的 admin/123456
 ### docker-compose.yml
 ```yaml
 version: '3'
@@ -59,9 +59,8 @@ services:
 mkdir -p ~/steamcmd
 mkdir -p ~/dst-dedicated-server
 mkdir -p ~/dstsave
-touch ~/dstsave/first
-touch ~/dstsave/dst-db
 ```
+如果你需要挂载 password.txt、dst-db 和 first 文件，请提前创建好
 
 ```bash
 
