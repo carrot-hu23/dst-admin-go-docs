@@ -36,6 +36,7 @@ export default defineConfig({
             { text: '配置说明', link: '/guide/configuration' },
             { text: '导入自定义存档', link: '/guide/export_user_cluster' },
             { text: '模组失效问题', link: '/guide/mod-issues' },
+            { text: '多房间版本使用', link: '/guide/use-dst' },
             { text: 'NAT VPS 部署', link: '/guide/nat-vps' },
             { text: 'Docker 部署', link: '/guide/docker' },
             { text: '群晖系统部署', link: '/guide/synology-deployment' },

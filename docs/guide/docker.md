@@ -2,157 +2,467 @@
 outline: deep
 ---
 
-# Docker 部署
+# 🐳 Docker 部署指南
 
-> [docker仓库地址](https://hub.docker.com/r/hujinbo23/dst-admin-go)
+本文档介绍如何使用 Docker 部署 DST-Admin-Go 饥荒服务器管理面板。
 
-如果您的服务器支持 Docker，可以使用 Docker 来部署 `dst-admin-go`。
+## ✨ 特性
 
-## 使用 docker-compose (推荐)
+- ✅ 一键部署（适合新手）
+- ✅ 复用已有资源（适合老手）
+- ✅ 自动初始化管理员账号
+- ✅ 自动下载 SteamCMD
+- ✅ 自动下载 DST Dedicated Server
 
-### 前置文件
+---
+
+## 📋 部署方式选择
+
+根据您的实际情况选择合适的部署方式：
+
+| 部署方式 | 适用场景 | 特点 |
+|---------|---------|------|
+| **新手快速部署** | 首次使用，无现有资源 | 一条命令启动，自动下载所有依赖 |
+| **进阶复用部署** | 已有 SteamCMD/服务器 | 复用现有资源，避免重复下载 |
+| **Docker Compose** | 需要便捷管理和维护 | 配置文件化，易于版本控制 |
+
+---
+
+## 🟢 方案一：新手快速部署
+
+### 适用对象
+
+- 从未安装过 SteamCMD
+- 从未安装过 DST Dedicated Server
+- 希望一条命令快速启动
+
+### 部署步骤
+
+#### 1. 创建数据目录
+
 ```bash
-# 创建 first 文件
-touch ~/dstsave/first
-touch ~/dstsave/dst-db
-
-# 创建 ~/dstsave/password.txt 文件
-echo "username = admin
-password = 123456
-displayName = admin
-photoURL = 
-email = xxx" > ~/dstsave/password.txt
+mkdir -p ~/dstsave
 ```
-如果你挂载了 password.txt，那么登录账号密码就是上面的 admin/123456
-### docker-compose.yml
+
+#### 2. 运行容器
+
+```bash
+docker run -d \
+  --name dst-admin-go \
+  --restart=always \
+  -p 8082:8082 \
+  -p 10888:10888/udp \
+  -p 10998:10998/udp \
+  -p 10999:10999/udp \
+  -v ~/dstsave:/data \
+  hujinbo23/dst-admin-go:latest
+```
+
+#### 3. 等待自动初始化
+
+首次启动容器会自动完成以下操作：
+
+- 下载 SteamCMD
+- 下载 DST Dedicated Server
+- 初始化管理员账号
+- 创建数据库文件
+
+整个过程需要 5-15 分钟（取决于网络速度），可通过以下命令查看日志：
+
+```bash
+docker logs -f dst-admin-go
+```
+
+#### 4. 访问管理后台
+
+浏览器访问：`http://服务器IP:8082`
+
+**默认账号信息：**
+- 用户名：`admin`
+- 密码：`123456`
+
+::: warning 安全提示
+首次登录后请立即修改默认密码！
+:::
+
+---
+
+## 🔵 方案二：进阶复用部署
+
+### 适用对象
+
+- 已安装 SteamCMD
+- 已安装 DST Dedicated Server
+- 希望复用现有资源，避免重复下载
+
+### 前置条件
+
+确保您的系统中已存在以下目录：
+
+```
+~/steamcmd
+~/dst-dedicated-server
+~/dstsave
+```
+
+### 部署步骤
+
+运行容器并挂载现有目录：
+
+```bash
+docker run -d \
+  --name dst-admin-go \
+  --restart=always \
+  -p 8082:8082 \
+  -p 10888:10888/udp \
+  -p 10998:10998/udp \
+  -p 10999:10999/udp \
+  -v ~/dstsave:/data \
+  -v ~/steamcmd:/app/steamcmd \
+  -v ~/dst-dedicated-server:/app/dst-dedicated-server \
+  hujinbo23/dst-admin-go:latest
+```
+
+### 智能检测机制
+
+容器启动时会自动检测：
+
+- 如果已挂载 `/app/steamcmd` → 跳过 SteamCMD 下载
+- 如果已挂载 `/app/dst-dedicated-server` → 跳过服务器下载
+
+---
+
+## 🐋 方案三：Docker Compose 部署
+
+### 适用对象
+
+- 不喜欢长命令行参数
+- 需要便捷的服务管理
+- 希望配置文件化
+- 服务器长期运行
+
+### 新手版 Docker Compose
+
+#### 1. 创建数据目录
+
+```bash
+mkdir -p ~/dstsave
+```
+
+#### 2. 创建配置文件
+
+创建 `docker-compose.yml` 文件：
+
 ```yaml
-version: '3'
+version: "3.8"
 
 services:
   dst-admin-go:
-    image: hujinbo23/dst-admin-go:1.5.1
+    image: hujinbo23/dst-admin-go:1.6.1
     container_name: dst-admin-go
+    restart: always
+
     ports:
       - "8082:8082"
-      - "10999:10999/udp"
+      - "10888:10888/udp"
       - "10998:10998/udp"
+      - "10999:10999/udp"
+
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - ${PWD}/dstsave:/root/.klei/DoNotStarveTogether
-      - ${PWD}/dstsave/back:/app/backup
-      - ${PWD}/steamcmd:/app/steamcmd
-      - ${PWD}/dst-dedicated-server:/app/dst-dedicated-server
-      - ${PWD}/dstsave/password.txt:/app/password.txt
-      - ${PWD}/dstsave/dst-db:/app/dst-db
-      - ${PWD}/dstsave/first:/app/first
-    restart: unless-stopped
+      - ~/dstsave:/data
 ```
 
-## 使用 Docker Hub 镜像
-
-`dst-admin-go` 提供了官方 Docker 镜像，您可以直接从 Docker Hub 拉取并运行：
-
+#### 3. 启动服务
 
 ```bash
-# 创建目录
-mkdir -p ~/steamcmd
-mkdir -p ~/dst-dedicated-server
-mkdir -p ~/dstsave
+docker compose up -d
 ```
-如果你需要挂载 password.txt、dst-db 和 first 文件，请提前创建好
+
+#### 4. 访问后台
+
+浏览器访问：`http://服务器IP:8082`
+
+**默认账号：**
+- 用户名：`admin`
+- 密码：`123456`
+
+### 进阶版 Docker Compose
+
+如果您已有 SteamCMD 和服务器文件，可使用以下配置：
+
+```yaml
+version: "3.8"
+
+services:
+  dst-admin-go:
+    image: hujinbo23/dst-admin-go:1.6.1
+    container_name: dst-admin-go
+    restart: always
+
+    ports:
+      - "8082:8082"
+      - "10888:10888/udp"
+      - "10998:10998/udp"
+      - "10999:10999/udp"
+
+    volumes:
+      - ~/dstsave:/data
+      - ~/steamcmd:/app/steamcmd
+      - ~/dst-dedicated-server:/app/dst-dedicated-server
+```
+
+### 常用管理命令
 
 ```bash
+# 启动服务
+docker compose up -d
 
-# 拉取指定版本的镜像（推荐使用具体版本而不是 latest）
-docker pull hujinbo23/dst-admin-go:1.5.1
+# 停止服务
+docker compose down
 
-# 运行容器
-docker run -d \
-  --name dst-admin-go \
-  -p 8082:8082 \
-  -p 10999:10999/udp \
-  -p 10998:10998/udp \
-  -v ~/dstsave:/root/.klei/DoNotStarveTogether \
-  -v ~/dstsave/back:/app/backup \
-  -v ~/steamcmd:/app/steamcmd \
-  -v ~/dst-dedicated-server:/app/dst-dedicated-server \
-  hujinbo23/dst-admin-go:1.5.1
+# 查看日志
+docker compose logs -f
+
+# 重启服务
+docker compose restart
+
+# 更新服务
+docker compose pull
+docker compose up -d
 ```
 
-## 参数说明
+---
 
-- `-d`: 后台运行容器
-- `--name`: 指定容器名称
-- `-p 8082:8082`: 管理面板端口映射
-- `-p 10999:10999/udp`: 游戏服务器主端口映射
-- `-p 10998:10998/udp`: 游戏服务器次端口映射
-- `-v ~/dstsave:/root/.klei/DoNotStarveTogether`: 挂载游戏存档目录
-- `-v ~/dstsave/back:/app/backup`: 挂载存档备份目录
-- `-v ~/steamcmd:/app/steamcmd`: 挂载 SteamCMD 目录
-- `-v ~/dst-dedicated-server:/app/dst-dedicated-server`: 挂载饥荒专用服务器目录
+## 📁 数据目录说明
 
-下面三个参数都是文件，如果需要挂载请自行创建好
+### 目录结构
 
-- `-v ~/dstsave/dst-db:/app/dst-db`: 挂载玩家日志文件
-  ```shell
-  touch dst-db
-  ``` 
-- `-v ~/dstsave/password.txt:/app/password.txt`: 挂载密码文件
-  ```shell
-  cat > password.txt << EOF
-  username = admin
-  password = 123456
-  displayName = admin
-  photoURL =
-  email = xxx
-  EOF
-  ``` 
-- `-v ~/dstsave/first:/app/first`: 挂载初始化标识文件
-  ```shell
-  touch first
-  ``` 
+所有数据统一存放在 `~/dstsave` 目录下：
 
-## 路径说明
+```
+~/dstsave/
+├── klei/                    # 世界存档目录
+├── backup/                  # 备份目录
+├── steamcmd/                # SteamCMD 程序目录
+├── dst-dedicated-server/    # DST 服务器程序目录
+├── dst-db                   # 数据库文件
+├── password.txt             # 管理员账号信息
+└── first                    # 初始化标记文件
+```
 
-容器内各组件的路径如下：
+### 目录说明
 
-- 容器存档启动路径: `/root/.klei/DoNotStarveTogether`
-- 容器存档备份路径: `/app/backup`
-- 容器存档模组路径: `/app/mod`
-- 容器玩家日志路径: `/app/dst-db` （这是一个文件）
-- 容器服务日志路径: `/app/dst-admin-go.log` （这是一个文件）
-- 容器启动饥荒路径: `/app/dst-dedicated-server`
-- 容器启动steamcmd：`/app/steamcmd`
-- `first` 文件: 代表是否第一次登录，如果没有这个文件会跳转到初始化界面设置账号
+| 名称 | 类型 | 说明 |
+|------|------|------|
+| `klei/` | 目录 | 饥荒世界存档和配置文件 |
+| `backup/` | 目录 | 自动备份的存档文件 |
+| `steamcmd/` | 目录 | Steam 命令行工具 |
+| `dst-dedicated-server/` | 目录 | 饥荒专用服务器程序 |
+| `dst-db` | 文件 | SQLite 数据库文件 |
+| `password.txt` | 文件 | 初始管理员账号密码 |
+| `first` | 文件 | 初始化完成标记 |
 
+::: warning 注意
+- `dst-db` 和 `first` 是**文件**，不是目录
+- `first` 文件由程序自动创建，无需手动创建
+:::
 
-## 首次运行初始化
+---
 
-首次运行容器时，由于缺少 `first` 文件，系统会跳转到初始化界面要求设置管理员账号和密码。您可以通过以下方式创建该文件以跳过初始化：
+## 🔄 版本升级
 
-## 文件权限问题
+### 升级步骤
 
-在 Linux 系统上，可能会遇到文件权限问题。可以通过以下方式解决：
+#### 1. 停止并删除旧容器
 
-1. 确保挂载目录的权限正确：
+```bash
+docker stop dst-admin-go
+docker rm dst-admin-go
+```
+
+#### 2. 拉取新版本镜像
+
+```bash
+docker pull hujinbo23/dst-admin-go:latest
+```
+
+#### 3. 重新运行容器
+
+使用之前的 `docker run` 命令重新创建容器即可。
+
+::: tip 提示
+数据目录 `~/dstsave` 中的所有数据不会丢失！
+:::
+
+### Docker Compose 升级
+
+如果使用 Docker Compose 部署，升级更简单：
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+---
+
+## ⚙️ 初始配置
+
+### 配置服务器令牌
+
+1. 浏览器访问 `http://服务器IP:8082`
+2. 使用默认账号登录（admin/123456）
+3. 进入「房间设置」页面
+4. 配置 Klei 服务器令牌
+
+::: tip 获取令牌
+访问 [Klei 官网](https://accounts.klei.com/account/game/servers?game=DontStarveTogether) 生成服务器令牌
+:::
+
+### 防火墙配置
+
+确保以下端口已开放：
+
+| 端口 | 协议 | 用途 |
+|------|------|------|
+| 8082 | TCP | 管理面板 |
+| 10888 | UDP | 游戏服务器（可选） |
+| 10998 | UDP | 洞穴服务器 |
+| 10999 | UDP | 地面服务器 |
+
+---
+
+## 🛠️ 常见问题
+
+### 1. 出现 `ln: failed to create symbolic link` 错误
+
+**原因：** 未正确挂载 `/data` 目录
+
+**解决方案：** 确保运行命令中包含以下参数：
+
+```bash
+-v ~/dstsave:/data
+```
+
+### 2. 管理面板端口无法访问
+
+**排查步骤：**
+
+1. 检查容器是否正常运行：
    ```bash
-   # 设置正确的所有者（将 1000 替换为您运行 Docker 的用户 ID）
-   sudo chown -R 1000:1000 ~/dstsave
-   sudo chown -R 1000:1000 ~/steamcmd
-   sudo chown -R 1000:1000 ~/dst-dedicated-server
+   docker ps
    ```
 
+2. 检查端口映射是否正确：
+   ```bash
+   docker port dst-admin-go
+   ```
 
-## 配置 dst-admin-go 面板
+3. 检查防火墙是否开放 8082 端口
 
-1. 打开浏览器访问 `http://IP:8082`
-2. 注册用户并登录（各个选项均可随意填写）
-3. 进入"房间设置"并配置令牌
+4. 查看容器日志：
+   ```bash
+   docker logs dst-admin-go
+   ```
 
-## 注意事项
+### 3. 游戏服务器无法连接
 
-1. 防火墙需要开放相应的端口（默认 8082 端口用于管理面板，UDP 10999 和 10998 端口用于游戏服务器）。
-2. 如果需要持久化数据，请确保正确挂载所有数据卷。
-3. 饥荒服务器文件需要在主机上通过 SteamCMD 下载，并挂载到容器中。
-4. 推荐使用具体版本号而不是 `latest` 标签，以确保环境一致性。
+**可能原因：**
+
+- UDP 端口未正确映射
+- 防火墙未开放游戏端口
+- 服务器令牌配置错误
+
+**解决方案：**
+
+1. 确认端口映射：
+   ```bash
+   docker ps | grep dst-admin-go
+   ```
+
+2. 检查防火墙规则
+
+3. 在管理面板中重新配置服务器令牌
+
+### 4. 想完全重置所有数据
+
+```bash
+# 停止并删除容器
+docker stop dst-admin-go
+docker rm dst-admin-go
+
+# 删除所有数据
+rm -rf ~/dstsave
+
+# 重新创建目录并运行容器
+mkdir -p ~/dstsave
+# 然后执行原来的 docker run 命令
+```
+
+::: danger 危险操作
+此操作会删除所有存档、配置和数据，请谨慎操作！
+:::
+
+### 5. 如何查看实时日志
+
+```bash
+# 查看实时日志
+docker logs -f dst-admin-go
+
+# 查看最近 100 行日志
+docker logs --tail 100 dst-admin-go
+```
+
+### 6. 容器无法启动或反复重启
+
+**排查步骤：**
+
+1. 查看容器状态：
+   ```bash
+   docker ps -a | grep dst-admin-go
+   ```
+
+2. 查看详细日志：
+   ```bash
+   docker logs dst-admin-go
+   ```
+
+3. 检查数据目录权限：
+   ```bash
+   ls -la ~/dstsave
+   ```
+
+---
+
+## 📝 补充说明
+
+### 关于版本号
+
+建议使用 `latest` 标签来自动获取最新版本，或使用具体版本号（如 `1.6.1`）以确保：
+
+- 环境一致性
+- 可重现部署
+- 避免意外更新
+
+### 关于数据持久化
+
+只要正确挂载了 `~/dstsave:/data`，以下数据都会持久保存：
+
+- 世界存档
+- 服务器配置
+- 管理员账号
+- 数据库文件
+
+即使删除容器，数据也不会丢失。
+
+### 关于服务器文件下载
+
+- 新手部署：容器内自动下载到 `/data/steamcmd` 和 `/data/dst-dedicated-server`
+- 进阶部署：使用主机上已有的文件，通过 Volume 挂载到容器内
+
+---
+
+## 🔗 相关链接
+
+- [项目 GitHub 仓库](https://github.com/hujinbo23/dst-admin-go)
+- [Klei 官方服务器文档](https://forums.kleientertainment.com/forums/topic/64441-dedicated-server-quick-setup-guide-linux/)
+- [Docker Hub](https://hub.docker.com/r/hujinbo23/dst-admin-go)
