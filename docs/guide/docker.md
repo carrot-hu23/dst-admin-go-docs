@@ -169,7 +169,7 @@ services:
       - "10999:10999/udp"
 
     volumes:
-      - ~/dstsave:/data
+      - ${PWD}/dstsave:/data
 ```
 
 #### 3. 启动服务
@@ -206,9 +206,9 @@ services:
       - "10999:10999/udp"
 
     volumes:
-      - ~/dstsave:/data
-      - ~/steamcmd:/app/steamcmd
-      - ~/dst-dedicated-server:/app/dst-dedicated-server
+      - ${PWD}/dstsave:/data
+      - ${PWD}/steamcmd:/app/steamcmd
+      - ${PWD}/dst-dedicated-server:/app/dst-dedicated-server
 ```
 
 ### 常用管理命令
