@@ -31,8 +31,8 @@ DST Admin Go 是一个使用 Golang 开发的饥荒联机版（Don't Starve Toge
 前往 [GitHub Releases](https://github.com/carrot-hu23/dst-admin-go/releases) 下载适用于 Linux 的最新版本。
 
 ```bash
-# 示例：下载 1.5.1 版本（请替换为最新版本）
-wget https://github.com/hujinbo23/dst-admin-go/releases/download/1.5.1/dst-admin-go.1.5.1.tgz
+# 示例：下载 1.6.1 版本（请替换为最新版本）
+wget https://github.com/carrot-hu23/dst-admin-go/releases/download/1.6.1/dst-admin-go.1.6.1.tar.gz
 ```
 
 ### 2. 解压文件
@@ -40,7 +40,7 @@ wget https://github.com/hujinbo23/dst-admin-go/releases/download/1.5.1/dst-admin
 使用 `tar` 命令解压下载的文件：
 
 ```bash
-tar -zvxf dst-admin-go.1.5.1.tgz
+tar -zvxf dst-admin-go.1.6.1.tar.gz
 ```
 
 ### 3. 进入目录
@@ -48,7 +48,7 @@ tar -zvxf dst-admin-go.1.5.1.tgz
 解压后，切换到解压出的目录中：
 
 ```bash
-cd dst-admin-go.1.5.1
+cd dst-admin-go.1.6.1
 ```
 
 ### 4. 安装环境（可选）
